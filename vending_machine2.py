@@ -3,7 +3,7 @@ import json
 def vending_machine(bal, n):
     # Initialize fields
     with open("items.json", "r") as file:
-        items = json.load(file)
+            items = json.load(file)
     
     # print(items)
 
@@ -23,19 +23,21 @@ def vending_machine(bal, n):
 
         # Delete items if amount is 0
         
-        to_del = []
-        for key in items:
-            if items[key]["amount"] == 0:
-                to_del.append(key)
-        for item in to_del:
-            items.pop(item)
+        # with open("items.json", "r") as file:
+        #     items = json.load(file)
+        # to_del = []
+        # for key in items:
+        #     if items[key]["amount"] == 0:
+        #         to_del.append(key)
+        # for item in to_del:
+        #     items.pop(item)
            
-        newData = json.dumps(items)
-        with open("items.json", "w") as file:
-            file.write(newData)
+        # newData = json.dumps(items)
+        # with open("items.json", "w") as file:
+        #     file.write(newData)
 
-        with open("items.json", "r") as file:
-            items = json.load(file)
+        # with open("items.json", "r") as file:
+        #     items = json.load(file)
 
         # Cash in
         if user_input == "0":
@@ -128,11 +130,11 @@ def vending_machine(bal, n):
             for key_1 in items:
                 for key_2 in items_bought:
                     if key_1 == key_2:
-                        print("Equal")
+                        # print("Equal")
                         data[key_1]["amount"] = items[key_1]["amount"] - items_bought[key_2]["amount"]
-                        newData = json.dumps(data, indent=4)
-                        with open("items.json", "w") as file:
-                            file.write(newData)
+            newData = json.dumps(data, indent=4)
+            with open("items.json", "w") as file:
+                file.write(newData)
             print("Items bought: ")
             for item in items_bought:
                     print(item, end=": ")
@@ -160,7 +162,7 @@ def vending_machine(bal, n):
                if item in items:
                    amount = int(input("Enter amount: "))
                    items[item]["amount"] += amount
-                   newData = json.dump(items, indent=4)
+                   newData = json.dumps(items, indent=4)
                    with open("items.json", "w") as file:
                        file.write(newData)
                else:
@@ -198,13 +200,15 @@ def vending_machine(bal, n):
                         print("Sorry, the amount you entered exceeds the stock. Please enter a lower amount.")
                     else:
                         items[item]["amount"] -= amount
-                        newData = json.dump(items, indent=4)
+                        newData = json.dumps(items, indent=4)
                         with open("items.json", "w") as file:
                             file.write(newData)
                         break
 
         # Show items
         elif user_input == "6":
+            with open("items.json", "r") as file:
+                items = json.load(file)
             for item in items:
                 print(f"{item}".ljust(15, " ").capitalize(), end="- ")
                 for x in items[item]:
@@ -212,7 +216,7 @@ def vending_machine(bal, n):
                     if x == "price":
                         print(f"{x}" + f" : ₱{items[item][x]}".capitalize().ljust(15, " "), end=" ")
                     else:
-                        print(f"{x}" + f" : {items[item][x]}".capitalize().ljust(15, " "), end=" ")
+                        print(f"available" + f" : {items[item][x]}".capitalize().ljust(15, " "), end=" ")
                 print()
 
         # Exit
@@ -236,7 +240,7 @@ if __name__ == "__main__":
     # Start accounts loop
     while True:
         try:
-            user_input = int(input("(0) login, (1) register, (3) exit: "))
+            user_input = int(input("(0) login, (1) register, (2) exit: "))
         except ValueError:
             print("Invalid input, please try again.")
             continue
@@ -297,7 +301,7 @@ if __name__ == "__main__":
                 newData = json.dumps(data, indent=4)
             with open('accounts.json', 'w') as file:
                 file.write(newData)
-        elif user_input == 3:
+        elif user_input == 2:
             print("Thank you for using the vending machine, good bye!")
             break
         else:

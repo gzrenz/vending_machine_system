@@ -16,17 +16,12 @@ if __name__ == "__main__":
         user_input = input(("*" * len(text1)) + f"\n{text1}" + f"\n{text2}\n" + ("*") * len(text1) + "\n")
 
         """Delete item if amount is 0"""
-        while True:
-            to_del = ""
-            for key in items:
-                if items[key]["amount"] == 0:
-                    to_del = key
-            try:
-                del items[to_del]
-                continue
-            except KeyError:
-                pass
-            break
+        to_del = []
+        for key in items:
+            if items[key]["amount"] == 0:
+                to_del.append(key)
+        for x in to_del:
+            del items[x]
         ######################################################################
         if user_input == "0":
            """Check balance"""

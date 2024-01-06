@@ -13,14 +13,25 @@ class vending_machine:
         return self.items[name]["amount"]
     def set_item_price(self, name, price):
         self.items[name]["price"] = price
-    def set_item_amount(self, name, amount):
-        self.items[name]["amount"] = amount
+        self.refresh()
+    def decrement_item_amount(self, name, amount):
+        self.items[name]["amount"] -= amount
+        self.refresh()
     def delete_item(self, name):
         del self.items[name]
-    def remove_item(self, name, amount):
-        self.items[name]["amount"] -= amount
+        self.refresh()
     def add_item(self, name, amount, price):
         self.items.update({name : {"amount": amount, "price": price}})
+        self.refresh()
+    def increment_item_num(self, name, amount):
+        self.items[name]["amount"] += amount
+        self.refresh()
+
+    def refresh(self):
+        with open("items.json", "w") as file:
+            json.dump(self.items, file)
+        vm = vending_machine("items.json") 
+        self.items = vm.items
     
 
 # def vending_machine(bal, n):

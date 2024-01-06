@@ -1,14 +1,1 @@
-{
-    "water": {
-        "amount": 5,
-        "price": 10
-    },
-    "fries": {
-        "amount": 5,
-        "price": 20
-    },
-    "bread": {
-        "amount": 5,
-        "price": 15
-    }
-}
+{"soda": {"amount": 5, "price": 25}, "popcorn": {"amount": 5, "price": 20}, "water": {"amount": 5, "price": 10}, "bread": {"amount": 3, "price": 15}, "chicharon bulaklak": {"amount": 5, "price": 50}}

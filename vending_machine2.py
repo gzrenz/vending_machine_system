@@ -19,7 +19,7 @@ def vending_machine(bal, n):
     while True:
         text1 = "Options: (0) check balance, (1) cash-in, (2) cash-out, (3) buy-items"
         text2 = "(4) add item/s, (5) remove item/s, (6) check items, (7) exit"
-        user_input = input(("*" * len(text1)) + f"\n{text1}" + f"\n{text2}\n" + ("*") * len(text1) + "\n")
+        user_input = input(("*" * len(text1)) + f"\n{text1}" + f"\n{text2}\n" + ("*") * len(text1) + "\nPicked Option: ")
 
         # Delete items if amount is 0
         
@@ -44,7 +44,7 @@ def vending_machine(bal, n):
            """Check balance"""
            with open("accounts.json") as file:
                data = json.load(file)
-               balance = data["accounts"][name]["balance"]
+               balance = data[name]["balance"]
            print(f"₱{balance}") 
 
         # Cash in           
@@ -56,7 +56,7 @@ def vending_machine(bal, n):
                continue
            with open("accounts.json", "r") as file:
                data = json.load(file)
-               data["accounts"][name]["balance"] += amount
+               data[name]["balance"] += amount
 
            newData = json.dumps(data, indent=4)
            with open("accounts.json", "w") as file:
@@ -77,7 +77,7 @@ def vending_machine(bal, n):
                 else: 
                     with open("accounts.json") as file:
                         data = json.load(file)
-                        data["accounts"][name]["balance"] -= amount
+                        data[name]["balance"] -= amount
                     
                     newData = json.dumps(data, indent=4)
                     with open("accounts.json", "w") as file:
@@ -144,7 +144,7 @@ def vending_machine(bal, n):
             print("Total Price:", total_price)
             with open("accounts.json", "r") as file: 
                 data = json.load(file)
-                data["accounts"][name]["balance"] -= total_price
+                data[name]["balance"] -= total_price
             newData = json.dumps(data, indent=4)
             with open("accounts.json", "w") as file:
                 file.write(newData)
@@ -240,7 +240,7 @@ if __name__ == "__main__":
     # Start accounts loop
     while True:
         try:
-            user_input = int(input("(0) login, (1) register, (2) exit: "))
+            user_input = int(input("Options: (0) login, (1) register, (2) exit\nPicked Option: "))
         except ValueError:
             print("Invalid input, please try again.")
             continue
@@ -249,7 +249,7 @@ if __name__ == "__main__":
             with open("accounts.json", "r") as file:
                 data = json.load(file)
                 name = input("Enter username: ")
-                for n in data["accounts"]:
+                for n in data:
                     user_found = False
                     # Checks if username is found
                     if name == n:
@@ -259,12 +259,12 @@ if __name__ == "__main__":
                             password = input("Enter password: ")
                             if password == "x":
                                 break
-                            elif data["accounts"][name]["password"] != password:
+                            elif data[name]["password"] != password:
                                 print("Wrong password, try again. Press x to exit")
                                 continue
                             else:
                                 # Enter vending machine system with user balance
-                                vending_machine(data["accounts"][name]["balance"], name)
+                                vending_machine(data[name]["balance"], name)
                                 break
                 if username_found == False:
                     print("Username not found")
@@ -276,7 +276,7 @@ if __name__ == "__main__":
                     with open("accounts.json") as file:
                         data = json.load(file)
                         user_name_already_taken = False
-                        for n in data["accounts"]:
+                        for n in data:
                                 if n == name:
                                     print("Username already taken")
                                     user_name_already_taken = True
@@ -297,7 +297,7 @@ if __name__ == "__main__":
                         print("Password must be at least 8 characters")
                         continue
                     break
-                data["accounts"][name] = {"balance" : 0, "password" : password}
+                data[name] = {"balance" : 0, "password" : password}
                 newData = json.dumps(data, indent=4)
             with open('accounts.json', 'w') as file:
                 file.write(newData)

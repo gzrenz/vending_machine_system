@@ -1,1 +1,1 @@
-{"bread": {"amount": 2, "price": 15}, "burger": {"amount": 4, "price": 35}, "fries": {"amount": 4, "price": 25}, "soda": {"amount": "5", "price": "20"}}
+{"bread": {"amount": "2", "price": "15"}, "burger": {"amount": 4, "price": 35}, "Bread": {"amount": "2", "price": "15"}}

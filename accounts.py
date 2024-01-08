@@ -11,6 +11,8 @@ class Accounts:
     
     def set_logged_account(self, name):
         self.logged_account = name
+    def get_logged_account(self):
+        return self.logged_account
     def get_account_balance(self):
         return self.accounts[self.logged_account]["balance"]
     def get_account_password(self):

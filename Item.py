@@ -1,13 +1,8 @@
 class Item:
-    def __init__(self, name, price, amount):
+    def __init__(self, index, name, price, amount, prev, next):
+        self.index = index
         self.name = name
         self.price = price
         self.amount = amount
-
-    def get_price(self): return self.price
-    def get_name(self): return self.name
-    def set_price(self, price): self.price = price
-    def set_name(self, name): self.name = name
-    def get_amount(self): return self.amount
-    def set_amount(self): self.amount = amount
-        
+        self.next = next
+        self.prev = prev

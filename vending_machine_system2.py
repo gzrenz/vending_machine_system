@@ -79,8 +79,6 @@ def vending_machine_system():
 
         # Buy items
         elif user_input == "3":
-            with open("items.json", "r") as file:
-                data = json.load(file)
             items_stack = []
             items_bought = {}
             total_price = 0
@@ -107,12 +105,12 @@ def vending_machine_system():
                     except ValueError:
                         print("Invalid input. Please try again.")
                         continue
-                    if amount > vm.items[item]["amount"]:
+                    if amount > int(vm.items[item]["amount"]):
                         print("Sorry, the amount you entered exceeds the stock. Please enter a lower amount")
                     else:
                         break
                 items_bought.update({item: {"amount": amount, "price": vm.items[item]["price"]}})
-                total_price += amount * vm.items[item]["price"]
+                total_price += amount * int(vm.items[item]["price"])
 
             # Update total items bought
             total_items_bought.update(items_bought)

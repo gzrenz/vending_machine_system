@@ -13,8 +13,6 @@ vm = vending_machine("items.json")
 username = ''
 password = ''
 
-#PROGRESS BAR
-
 def vending_machine_system():
     print(accs.get_logged_account)
     layout = [
@@ -33,8 +31,9 @@ def vending_machine_system():
 
     items = []
     for item in vm.items:
-        items += [[ item, str(vm.items[item]["price"]), str(vm.items[item]["amount"])]]
+        items += [[ item.title(), vm.items[item]["price"], vm.items[item]["amount"]]]
     window = sg.Window('GX Vending Machine', layout)
+
 
 
     while True:
@@ -44,19 +43,26 @@ def vending_machine_system():
             window.close()
             break
         elif event == "Refresh":
-            ...
+            window["-TABLE-"].update(items)
         elif event == "Add":
             print(event, values)
-            name = values['-ITEM_NAME-']
-            price = values['-PRICE-']
-            amount = values["-AMOUNT-"]
-            item = [[name, price, amount]]
-            items += item
+            name = values['-ITEM_NAME-'].lower()
+            price = int(values['-PRICE-'])
+            amount = int(values["-AMOUNT-"])
+            in_stock = False
+            for i in items:
+                if name.title() == i[0]:
+                    i[2] += amount
+                    i[1] = price
+                    in_stock = True
+            if not in_stock:
+                item = [[name, price, amount]]
+                items += item
             window["-TABLE-"].update(items)
             window["-ITEM_NAME-"].update('')
             window["-PRICE-"].update('')
             window["-AMOUNT-"].update('')
-            vm.add_item(name, amount, price)
+            vm.add_item(name, amount + vm.get_item_amount(name), price)
         elif event == '-DEL-':
             if values["-TABLE-"]:
                 indx = values["-TABLE-"][0]
@@ -83,13 +89,12 @@ def vending_machine_system():
                         print(values["-CASH_IN_AMOUNT-"])
                         amount = int(values["-CASH_IN_AMOUNT-"])
                         accs.increment_account_balance(amount)
-                        sg.popup_ok("Successfully cashed out!")
+                        sg.popup_ok("Successfully cashed in!")
                     except ValueError:
                         pass
                     window["-BALANCE-"].update(str(accs.get_account_balance()))
                     cash_in_window.close()
                     break
-            ...
         elif event == 'Cash out':
             cash_out_layout = [[sg.T("Enter amount to be cashed out")], [sg.I(key="-CASH_OUT_AMOUNT-")],
                               [sg.Ok(), sg.Cancel()]]
@@ -112,6 +117,32 @@ def vending_machine_system():
                     window["-BALANCE-"].update(str(accs.get_account_balance()))
                     cash_out_window.close()
                     break
+            ...
+        elif event == "Buy":
+            try:
+                index = values["-TABLE-"][0]
+                buy_layout = [[sg.T("Enter amount")], [sg.I(key="-AMOUNT-")], [sg.Ok(), sg.Cancel()]]
+                buy_window = sg.Window("", buy_layout)
+                while True:
+                    event, buy_values = buy_window.read()
+                    if event in (sg.WIN_CLOSED, "Cancel"):
+                        buy_window.close()
+                        break
+                    elif event == "Ok":
+                        amount = int(buy_values["-AMOUNT-"])
+                        price = items[index][1]
+                        if amount * price > accs.get_account_balance():
+                            sg.popup_ok("Insufficient balance")
+                        else:
+                            name = items[index][0].lower()
+                            sg.popup_ok(f"Successfully bought {amount} {name}")
+                            items[index][2] -= amount
+                            vm.decrement_item_amount(name, amount)
+                            accs.decrement_account_balance(amount * price)
+            except IndexError:
+                sg.popup_ok("Please select an item")
+
+
             ...
 
 def progress_bar():
@@ -144,7 +175,6 @@ def login_signup():
     window = sg.Window("Account", layout)
 
     while True:
-
         event,values = window.read()
         window['-username-'].update('')
         window['-password-'].update('')
@@ -159,8 +189,8 @@ def login_signup():
                     window['-user_not_found-'].update(visible=True)
                 else:
                     if password != accs.accounts[username]["password"]:
+                        print("password incorrect")
                         window['-password_incorrect-'].update(visible=True)
-                        break
                     else:
                         window.close()
                         accs.set_logged_account(username)
@@ -177,7 +207,8 @@ def login_signup():
                     accs.accounts.update({username : {'balance' : 0, 'password' : password}})
                     accs.refresh()
 
-login_signup()
+if __name__ == "__main__":
+    login_signup()
 
 
 # create_account()
